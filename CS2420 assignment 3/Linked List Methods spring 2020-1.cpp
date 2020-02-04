@@ -224,7 +224,7 @@ public:
     void insertNewFifthElement(const T& data);
     T getFifthElement() const;
     void deleteFifthElement();
-    //void swapFourthAndFifthElement();
+    void swapFourthAndFifthElement();
 };
 
 template<typename T>
@@ -245,7 +245,7 @@ void SinglyLinkedList<T>::insertNewFifthElement(const T& data) {
 
     //the flag is to make sure that temp made it to the fourth element
     bool flag = true;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         if (temp->link) {
             temp = temp->link;
         }
@@ -306,7 +306,7 @@ void SinglyLinkedList<T>::deleteFifthElement() {
 
     bool flag = true;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 3; i++) {
         if (temp->link) {
             temp = temp->link;
         }
@@ -337,6 +337,57 @@ void SinglyLinkedList<T>::deleteFifthElement() {
             delete rem;
         }
     }
+}
+
+template<typename T>
+void SinglyLinkedList<T>::swapFourthAndFifthElement() {
+    Node<T>* temp = nullptr;
+    if (this->first) {
+        temp = this->first;
+    }
+    else {
+        //if this doesn't work, it's an empty list, so I don't need to do anything
+        return;
+    }
+
+    //it's a bit odd to do a for loop that only runs twice, but for consistency's sake I'll use the same strategy to loop forward
+    for (int i = 0; i < 2; i++) {
+        if (temp->link) {
+            temp = temp->link;
+        }
+        else {
+            return;
+        }
+    }
+
+    //temp is now element 3, make sure that there's a fifth element in the list
+    if (!temp->link->link) {
+        return;
+    }
+
+    //now that we've got temp to the fourth element, and ensured that a fifth element does exist, do the actual swap
+    Node<T>* four = temp->link;
+    Node<T>* five = four->link;
+
+    if (this->last == five) {
+        temp->link = five;
+        five->link = four;
+        four->link = nullptr;
+        last = four;
+    }
+    else {
+        Node<T>* six = five->link;
+
+        //rearrange the pointers
+        temp->link = five;
+        five->link = four;
+        four->link = six;
+    }
+    
+    
+    
+
+
 }
 
 //TODO: Define your methods here.
