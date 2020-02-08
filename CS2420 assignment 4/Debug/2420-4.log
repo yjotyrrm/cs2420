@@ -1,0 +1,39 @@
+﻿  Linked list methods generalized spring 2020.cpp
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(211,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(200): message : while compiling class template member function 'T DoublyLinkedList<T>::get(const unsigned int) const'
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(470): message : see reference to function template instantiation 'T DoublyLinkedList<T>::get(const unsigned int) const' being compiled
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(460): message : see reference to class template instantiation 'DoublyLinkedList<int>' being compiled
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(237,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(226): message : while compiling class template member function 'T &DoublyLinkedList<T>::operator [](const unsigned int) const'
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(521): message : see reference to function template instantiation 'T &DoublyLinkedList<T>::operator [](const unsigned int) const' being compiled
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(283,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(251): message : while compiling class template member function 'void DoublyLinkedList<int>::insert(const unsigned int,const T &)'
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(571): message : see reference to function template instantiation 'void DoublyLinkedList<int>::insert(const unsigned int,const T &)' being compiled
+          with
+          [
+              T=int
+          ]
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(322,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(312): message : while compiling class template member function 'void DoublyLinkedList<int>::remove(const unsigned int)'
+C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Linked list methods generalized spring 2020.cpp(614): message : see reference to function template instantiation 'void DoublyLinkedList<int>::remove(const unsigned int)' being compiled
+  2420-4.vcxproj -> C:\Users\Snow\Documents\CS2420\CS2420 assignment 4\Debug\2420-4.exe

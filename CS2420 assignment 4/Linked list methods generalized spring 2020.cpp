@@ -186,8 +186,228 @@ string BaseDoublyLinkedList<T>::getListBackwardsAsString() {
 //**********************************
 template <typename T>
 class DoublyLinkedList : public BaseDoublyLinkedList<T> {
+    public:
+        T get(const unsigned int index) const;
+        T& operator[](const unsigned int index) const;
+        void insert(const unsigned int index, const T& value);
+        void remove(const unsigned int index);
+        void removeAllInstances(const T& value);
+    private:
 
 };
+
+template <typename T>
+T DoublyLinkedList<T>::get(const unsigned int index) const {
+
+    Node<T>* temp = nullptr;
+    if (this->first) {
+        temp = this->first;
+    }
+    else {
+        //if this doesn't work, it's an empty list, so just throw an error
+        throw 1;
+    }
+
+    for (int e = 0; e < index; e++) {
+        if (temp->forward) {
+            temp = temp->forward;
+        }
+        else {
+            throw 1;
+        }
+    }
+
+    return temp->data;
+
+
+}
+
+template <typename T>
+T& DoublyLinkedList<T>::operator[](const unsigned int index) const {
+
+    Node<T>* temp = nullptr;
+    if (this->first) {
+        temp = this->first;
+    }
+    else {
+        //if this doesn't work, it's an empty list, so just throw an error
+        throw 1;
+    }
+
+    for (int e = 0; e < index; e++) {
+        if (temp->forward) {
+            temp = temp->forward;
+        }
+        else {
+            throw 1;
+        }
+    }
+
+    return temp->data;
+
+}
+
+template <typename T>
+void DoublyLinkedList<T>::insert(const unsigned int index, const T& value) {
+    //the node we're eventually inserting
+    Node<T>* ins = new Node<T>();
+    ins->data = value;
+
+    //handle the edge case where we're adding in a new front element
+    if (index == 0) {
+        if (first) {
+            first->backward = ins;
+            ins->forward = first;
+            ins->backward = nullptr;
+            first = ins;
+        }
+        else {
+            ins->forward = nullptr;
+            ins->backward = nullptr;
+            first = ins;
+            last = ins;
+        }
+    }
+    else {
+        Node<T>* iter = nullptr;
+
+        if (this->first) {
+            iter = this->first;
+        }
+        else {
+            //if this doesn't work, it's an empty list, so just throw an error
+            throw 1;
+        }
+
+        //get iter to the node before we want to insert the new one
+        for (int i = 0; i < index - 1; i++) {
+            if (iter->forward) {
+                iter = iter->forward;
+            }
+            else {
+                throw 1;
+            }
+        }
+
+        //handle the inserting at the end of the list edge case
+        if (iter == last) {
+            iter->forward = ins;
+            ins->backward = iter;
+            ins->forward = nullptr;
+            last = ins;
+        }
+        else {
+            Node<T>* next = iter->forward;
+            //insert ins between iter and next
+            iter->forward = ins;
+            ins->backward = iter;
+            ins->forward = next;
+            next->backward = ins;
+        }
+
+
+    }
+}
+template <typename T>
+void DoublyLinkedList<T>::remove(const unsigned int index) {
+    Node<T>* iter = nullptr;
+    if (first) {
+        iter = first;
+    }
+    else {
+        return;
+    }
+        
+    //get iter to the thing we want to delete
+    for (int i = 0; i < index; i++) {
+        if (iter->forward) {
+            iter = iter->forward;
+        }
+        else {
+            return;
+        }
+    }
+
+    if (iter == first && iter == last) {
+        first = nullptr;
+        last = nullptr;
+        delete iter;
+    }
+    else if (iter == first) {
+        first = iter->forward;
+        first->backward = nullptr;
+        delete iter;
+    }
+    else if (iter == last) {
+        last = iter->backward;
+        last->forward = nullptr;
+        delete iter;
+    }
+    else {
+        Node<T>* fore = iter->forward;
+        Node<T>* aft = iter->backward;
+        //have fore and aft link directly to each other, cutting iter out of the list
+        fore->backward = aft;
+        aft->forward = fore;
+        delete iter;
+    }
+        
+
+}
+
+template <typename T>
+void DoublyLinkedList<T>::removeAllInstances(const T& value) {
+    Node<T>* iter = nullptr;
+    if (first) {
+        iter = first;
+    }
+    else {
+        return;
+    }
+
+    while (iter->forward) {
+        if (iter->data == value) {
+            if (iter == first) {
+                first = iter->forward;
+                first->backward = nullptr;
+                //I am giving the current iter back to memory, before reusing the iter variable and setting it to the new first element
+                delete iter;
+                iter = first;
+            }
+            else {
+                Node<T>* fore = iter->forward;
+                Node<T>* aft = iter->backward;
+                //have fore and aft link directly to each other, cutting iter out of the list
+                fore->backward = aft;
+                aft->forward = fore;
+                delete iter;
+                iter = aft;
+            }
+        }
+        else {
+            iter = iter->forward;
+        }
+    }
+    //the while loop will not run for the last element, so I'll handle that one manually
+    if (last->data == value) {
+        if (last == first) {
+            Node<T>* temp = last;
+            last = nullptr;
+            first = nullptr;
+            delete temp;
+        }
+        else {
+            Node<T>* temp = last;
+            last = last->backward;
+            last->forward = nullptr;
+            delete temp;
+        }
+    }
+}
+
+
+
+
 
 
 
