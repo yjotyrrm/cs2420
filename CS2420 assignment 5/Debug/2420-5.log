@@ -1,0 +1,3 @@
+﻿  Linked List Iterators spring 2020.cpp
+C:\Users\yjotyrrm\Documents\cs2420\CS2420 assignment 5\Linked List Iterators spring 2020.cpp(66): warning C4715: 'Iterator<int>::operator++': not all control paths return a value
+  2420-5.vcxproj -> C:\Users\yjotyrrm\Documents\cs2420\CS2420 assignment 5\Debug\2420-5.exe
