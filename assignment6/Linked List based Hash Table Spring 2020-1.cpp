@@ -79,8 +79,8 @@ public:
   unsigned int getNumBuckets() { return buckets; }
 
   // TODO: Create the following methods
-  void create(string key, const T& value);
-  void create(string key, T&& value);
+  void create(const string& key, const T& value);
+  void create(const string& key, T&& value);
   // exists()
   bool exists(string key);
   // retrieve()
@@ -99,21 +99,16 @@ private:
 };
 
 template <typename T>
-void HashTable<T>::create(string key, const T& value) {
+void HashTable<T>::create(const string& key, const T& value) {
     int index = (hash<string>{}(key)) % buckets;
     cout << "creation index " << index;
     //the actual linked list, or "bucket" we need to work with
     forward_list< pair< string, T > >* bucket = arr[index];
 
     //check to make sure the key isn't already in, and if it is just cout and return
-    for (auto& item : bucket) {
-        if (item.first == key) {
-            cout << "the key " << key << " is already in the list" << endl;
-            return;
-        }
-    }
+
     //push the key value page
-    bucket.push_back(pair<string, T>(key, value));
+    bucket.push_front(pair<string, T>(key, value));
 }
 
 template <typename T>
@@ -123,13 +118,7 @@ void HashTable<T>::create(string key, T&& value) {
     //the actual linked list, or "bucket" we need to work with
     forward_list< pair< string, T > > bucket = arr[index];
 
-    //check to make sure the key isn't already in, and if it is just cout and return
-    for (auto& item : bucket) {
-        if (item.first == key) {
-            cout << "the key " << key << " is already in the list" << endl;
-            return;
-        }
-    }
+
 
     //it says to use emplace_front, even though I push the L values to the back.  Regardless, I don't think it particularly matters how this linked list is ordered
     bucket.emplace_front(key, value);

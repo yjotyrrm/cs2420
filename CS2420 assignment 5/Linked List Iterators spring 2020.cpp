@@ -48,7 +48,7 @@ class Iterator : public std::iterator<std::bidirectional_iterator_tag, T> {
   friend class DoublyLinkedList<T>;
 public:
   //TODO: Implement the following:
-    T operator*() {
+    T& operator*() {
         return pos->data;
 
     }
@@ -84,7 +84,7 @@ public:
     }
 
     bool operator==(Iterator<T> other) {
-        return(other.pos == this->pos && other.pastTheEnd == this->pastTheEnd)
+        return((other.pos == this->pos) && (other.pastTheEnd == this->pastTheEnd));
     }
 
     Iterator<T> operator--() {
@@ -237,7 +237,7 @@ template <typename T>
 Iterator<T> DoublyLinkedList<T>::begin() {
     Iterator<T> ret = Iterator<T>();
     if (this->first) {
-        ret.pastTheEnd = false;
+        ret.pastTheEnd = false; 
     }
     else {
         ret.pastTheEnd = true;
@@ -270,12 +270,55 @@ Iterator<T> DoublyLinkedList<T>::end() {
 template <typename T>
 void assignmentReverse(T begin, T end) {
 
+   //since we're using the end() method, we need to pull it back from past the edge
   --end;
-  T copyEnd = end;
-  T copyBeg = begin;
+  auto copyEnd = end;
+  auto copyBeg = begin;
 
-  // TODO, put reverse logic here
+  //I'm sure there's a logically prettier way of doing this while loop, but I really don't care
+  while (true) {
+      copyBeg++;
+      //if beg has hit end, which should only happen on an even length list, as it's iterating first, so on an odd length it'd arrive on the "middle" value first
+      if (copyBeg == copyEnd) {
+          copyBeg--;
+          break;
+      }
 
+      copyEnd--;
+      //this should only happen on an odd length list, where end arrives at the middle after beg
+      if (copyEnd == copyBeg) {
+          copyBeg--;
+          copyEnd++;
+          break;
+      }
+  }
+  //at this point, copybeg and copyend should be sittng on their respective sides of the "middle", if it's odd there'll be a value between them that won't move, and if it's even they will be next to each other
+  
+
+  //secondary copies to do the actual swapping, so I can have copyBeg and copyEnd actually iterate over the list
+
+
+  //go across the list, swapping beg and end at every iteration
+  auto temp = *copyBeg;
+  while (copyBeg != begin) {
+
+      //swap the data in the nodes
+      temp = *copyBeg;
+      *copyBeg = *copyEnd;
+      *copyEnd = temp;
+
+
+      //iterate to the next pair
+      copyBeg--;
+      copyEnd++;
+
+      
+  }
+
+  //since our while loop doesn't run the swap code for the very last case, do that manually
+  temp = *copyBeg;
+  *copyBeg = *copyEnd;
+  *copyEnd = temp;
 }
 
 
@@ -514,139 +557,148 @@ void testIterationTricky() {
 //This helps with testing, do not modify.
 void testAlgorithms() {
 
-  //DoublyLinkedList<int> myList;
+  DoublyLinkedList<int> myList;
 
-  ////Our test data should have all even numbers from 2 to 20
-  //for (int i = 2; i <= 6; i += 2) {
-  //  myList.insertLast(i);
-  //}
-  //myList.insertLast(100);
-  //for (int i = 8; i <= 12; i += 2) {
-  //  myList.insertLast(i);
-  //}
-  //myList.insertLast(100);
-  //for (int i = 14; i <= 20; i += 2) {
-  //  myList.insertLast(i);
-  //}
-  //stringstream ss;
-  //cout << "testAlgorithms test #1, this should display 2 4 6 100 8 10 12 100 14 16 18 20." << endl;
-  //for (auto i : myList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #1", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
-  //ss.str("");
+  //Our test data should have all even numbers from 2 to 20
+  for (int i = 2; i <= 6; i += 2) {
+    myList.insertLast(i);
+  }
+  myList.insertLast(100);
+  for (int i = 8; i <= 12; i += 2) {
+    myList.insertLast(i);
+  }
+  myList.insertLast(100);
+  for (int i = 14; i <= 20; i += 2) {
+    myList.insertLast(i);
+  }
+  stringstream ss;
+  cout << "testAlgorithms test #1, this should display 2 4 6 100 8 10 12 100 14 16 18 20." << endl;
+  for (auto i : myList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #1", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
+  ss.str("");
 
-  ////Test the STL reverse algorithm on our iterator
-  //cout << "testAlgorithms test #2, this should display 20 18 16 14 100 12 10 8 100 6 4 2." << endl;
-  //reverse(myList.begin(), myList.end());
-  //for (auto i : myList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #2", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
-  //ss.str("");
+  //Test the STL reverse algorithm on our iterator
+  cout << "testAlgorithms test #2, this should display 20 18 16 14 100 12 10 8 100 6 4 2." << endl;
+  reverse(myList.begin(), myList.end());
+  for (auto i : myList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #2", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
+  ss.str("");
 
-  ////Get it back in ascending order using the STL reverse algorithm
-  //reverse(myList.begin(), myList.end());
-  //for (auto i : myList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #3", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
-  //ss.str("");
+  //Get it back in ascending order using the STL reverse algorithm
+  reverse(myList.begin(), myList.end());
+  for (auto i : myList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #3", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
+  ss.str("");
 
-  //// Try a custom assignmentReverse function
+  // Try a custom assignmentReverse function
 
-  //assignmentReverse(myList.begin(), myList.end());
-  //for (auto i : myList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #4", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
-  //ss.str("");
+  assignmentReverse(myList.begin(), myList.end());
+  for (auto i : myList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #4", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
+  ss.str("");
 
-  ////Get it back in ascending order using the STL reverse algorithm
-  //assignmentReverse(myList.begin(), myList.end());
-  //for (auto i : myList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
+  //Get it back in ascending order using the STL reverse algorithm
+  assignmentReverse(myList.begin(), myList.end());
+  for (auto i : myList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
 
-  //checkTest("testAlgorithms test #5", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
-  //ss.str("");
+  checkTest("testAlgorithms test #5", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
+  ss.str("");
 
-  //// Test assignmentReverse on an STL container:
+  // Test assignmentReverse on an STL container:
 
 
-  //list<int> stlList;
+  list<int> stlList;
 
-  ////Our test data should have all even numbers from 2 to 20
-  //for (int i = 2; i <= 6; i += 2) {
-  //  stlList.push_back(i);
-  //}
-  //stlList.push_back(100);
-  //for (int i = 8; i <= 12; i += 2) {
-  //  stlList.push_back(i);
-  //}
-  //stlList.push_back(100);
-  //for (int i = 14; i <= 20; i += 2) {
-  //  stlList.push_back(i);
-  //}
-  //for (auto i : stlList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #6", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
-  //ss.str("");
+  //Our test data should have all even numbers from 2 to 20
+  for (int i = 2; i <= 6; i += 2) {
+    stlList.push_back(i);
+  }
+  stlList.push_back(100);
+  for (int i = 8; i <= 12; i += 2) {
+    stlList.push_back(i);
+  }
+  stlList.push_back(100);
+  for (int i = 14; i <= 20; i += 2) {
+    stlList.push_back(i);
+  }
+  for (auto i : stlList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #6", "2 4 6 100 8 10 12 100 14 16 18 20 ", ss.str());
+  ss.str("");
 
-  //// Try a custom assignmentReverse function
+  // Try a custom assignmentReverse function
 
-  //assignmentReverse(stlList.begin(), stlList.end());
-  //for (auto i : stlList) {
-  //  cout << i << " ";
-  //  ss << i << " ";
-  //}
-  //cout << endl;
-  //checkTest("testAlgorithms test #7", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
-  //ss.str("");
+  assignmentReverse(stlList.begin(), stlList.end());
+  for (auto i : stlList) {
+    cout << i << " ";
+    ss << i << " ";
+  }
+  cout << endl;
+  checkTest("testAlgorithms test #7", "20 18 16 14 100 12 10 8 100 6 4 2 ", ss.str());
+  ss.str("");
 
 }
 
 
 //This helps with testing, do not modify.
 void testLambda() {
-  //DoublyLinkedList<Student> studentList;
-  //studentList.insertLast(Student("Alice", 30));
-  //studentList.insertLast(Student("Bob", 150));
-  //studentList.insertLast(Student("Carl", 10));
-  //studentList.insertLast(Student("Dan", 2000));
-  //studentList.insertLast(Student("Ed", 99));
-  //studentList.insertLast(Student("Fred", 100));
-  //studentList.insertLast(Student("Gary", 700));
+  DoublyLinkedList<Student> studentList;
+  studentList.insertLast(Student("Alice", 30));
+  studentList.insertLast(Student("Bob", 150));
+  studentList.insertLast(Student("Carl", 10));
+  studentList.insertLast(Student("Dan", 2000));
+  studentList.insertLast(Student("Ed", 99));
+  studentList.insertLast(Student("Fred", 100));
+  studentList.insertLast(Student("Gary", 700));
 
-  //// TODO: Write two lambda expressions
-  //// The first lambda needs to pass in a Student object by reference
-  //// then if the student object's money in the bank is less than 100, return true, otherwise, return false.
-  //// The second lambda needs to pass in a Student object by reference
-  //// then sets the object's money to 100.
-  //processCollection<Student>(studentList.begin(), studentList.end(), [](){}, [](){});
+  // TODO: Write two lambda expressions
+  // The first lambda needs to pass in a Student object by reference
+  // then if the student object's money in the bank is less than 100, return true, otherwise, return false.
+  // The second lambda needs to pass in a Student object by reference
+  // then sets the object's money to 100.
+  processCollection<Student>(studentList.begin(), studentList.end(), [](Student& st) { if (st.moneyInBank < 100) {
+      return true;
+  }
+  else {
+      return false;
+  }
+      }, [](Student& st){
+          st.moneyInBank = 100;
+          return st;
+      });
 
-  //stringstream ss;
-  //cout << "testAlgorithms test #1, this should display 2 4 6 100 8 10 12 100 14 16 18 20." << endl;
-  //for (auto& i : studentList) {
-  //  cout << i.name << ": " << i.moneyInBank << " ";
-  //  ss << i.name << ": " << i.moneyInBank << " ";
-  //}
-  //cout << endl;
-  //checkTest("testLambda test #1", "Alice: 100 Bob: 150 Carl: 100 Dan: 2000 Ed: 100 Fred: 100 Gary: 700 ", ss.str());
-  //ss.str("");
+  stringstream ss;
+  cout << "testAlgorithms test #1, this should display 2 4 6 100 8 10 12 100 14 16 18 20." << endl;
+  for (auto& i : studentList) {
+    cout << i.name << ": " << i.moneyInBank << " ";
+    ss << i.name << ": " << i.moneyInBank << " ";
+  }
+  cout << endl;
+  checkTest("testLambda test #1", "Alice: 100 Bob: 150 Carl: 100 Dan: 2000 Ed: 100 Fred: 100 Gary: 700 ", ss.str());
+  ss.str("");
 
 }
 
